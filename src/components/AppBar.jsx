@@ -1,22 +1,28 @@
 import { View, StyleSheet, Pressable } from 'react-native';
 import Constants from 'expo-constants';
 import Text from './Text';
+import theme from './Theme';
+import { Link } from 'react-router-native';
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#24292e',
-    height: 120,
-    justifyContent: 'center',
-    paddingHorizontal: 16,
+    backgroundColor: theme.colors.appBarBackground,
+    height: 80,
+    justifyContent: 'space-around',
+    paddingTop: 25,
+    flexDirection: 'row',
   },
 });
 
 const AppBar = () => {
   return <View style={styles.container}>{/* ... */}
-    <Pressable>
-      <Text fontWeight="bold" fontSize="subheading" style={{ color: "white"}}>Repositories</Text>
-    </Pressable>
+    <Link to="/" underlayColor="transparent">
+      <Text fontWeight="bold" fontSize="subheading" style={{ color: "white", fontSize: 22}}>Repositories</Text>
+    </Link>
+
+    <Link to="/signIn" underlayColor="transparent">
+      <Text fontWeight="bold" fontSize="subheading" style={{ color: "white", fontSize: 22}}>Sign in</Text>
+    </Link>
   </View>;
 };
 
