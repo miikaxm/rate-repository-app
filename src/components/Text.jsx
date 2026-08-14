@@ -11,15 +11,19 @@ const styles = StyleSheet.create({
   },
   colorTextSecondary: {
     color: theme.colors.textSecondary,
+    fontFamily: theme.fonts.main,
   },
   colorPrimary: {
     color: theme.colors.primary,
+    fontFamily: theme.fonts.main,
   },
   fontSizeSubheading: {
     fontSize: theme.fontSizes.subheading,
+    fontFamily: theme.fonts.main,
   },
   fontWeightBold: {
     fontWeight: theme.fontWeights.bold,
+    fontFamily: theme.fonts.main,
   },
 });
 
