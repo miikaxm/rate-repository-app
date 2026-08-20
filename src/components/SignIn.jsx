@@ -4,7 +4,8 @@ import { useFormik } from "formik";
 import theme from "./Theme";
 import * as yup from 'yup';
 
-import useSignIn from "./hooks/useSignIn";
+import useSignIn from "../hooks/useSignIn";
+import { useNavigate } from "react-router-native";
 
 const styles = StyleSheet.create({
   formField: {
@@ -55,6 +56,7 @@ const initialValues = {
 
 const SignIn = () => {
   const [singIn] = useSignIn();
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues,
@@ -65,6 +67,7 @@ const SignIn = () => {
       try {
         const { data } = await singIn({ username, password });
         console.log(data);
+        navigate('/');
       } catch (e) {
         console.log(e);
       }
