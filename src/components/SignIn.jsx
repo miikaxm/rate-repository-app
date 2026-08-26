@@ -57,24 +57,11 @@ const initialValues = {
   password: "",
 };
 
-const SignIn = () => {
-  const [singIn] = useSignIn();
-  const navigate = useNavigate();
-
+export const SignInContainer = ({ onSubmit }) => {
   const formik = useFormik({
     initialValues,
     validationSchema,
-    onSubmit: async (values) => {
-      const { username, password } = values;
-
-      try {
-        const { data } = await singIn({ username, password });
-        console.log(data);
-        navigate('/');
-      } catch (e) {
-        console.log(e);
-      }
-    },
+    onSubmit,
   });
 
   return (
@@ -83,14 +70,15 @@ const SignIn = () => {
         style={[
           styles.formField,
           formik.touched.username &&
-            formik.errors.username &&
-            styles.errorInput,
+          formik.errors.username &&
+          styles.errorInput,
         ]}
         placeholder="Username"
         value={formik.values.username}
         onChangeText={formik.handleChange("username")}
-        onBlur={formik.handleBlur('username')}
+        onBlur={formik.handleBlur("username")}
       />
+
       {formik.touched.username && formik.errors.username && (
         <Text style={styles.errorText}>{formik.errors.username}</Text>
       )}
@@ -99,15 +87,16 @@ const SignIn = () => {
         style={[
           styles.formField,
           formik.touched.password &&
-            formik.errors.password &&
-            styles.errorInput,
+          formik.errors.password &&
+          styles.errorInput,
         ]}
         placeholder="Password"
         value={formik.values.password}
         onChangeText={formik.handleChange("password")}
         secureTextEntry
-        onBlur={formik.handleBlur('password')}
+        onBlur={formik.handleBlur("password")}
       />
+
       {formik.touched.password && formik.errors.password && (
         <Text style={styles.errorText}>{formik.errors.password}</Text>
       )}
@@ -117,6 +106,23 @@ const SignIn = () => {
       </Pressable>
     </View>
   );
+};
+
+const SignIn = () => {
+  const [singIn] = useSignIn();
+  const navigate = useNavigate();
+
+  const onSubmit = async ({ username, password }) => {
+    try {
+      const { data } = await singIn({ username, password });
+      console.log(data);
+      navigate('/');
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  return <SignInContainer onSubmit={onSubmit} />;
 };
 
 export default SignIn;
