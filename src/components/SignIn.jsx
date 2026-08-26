@@ -21,7 +21,10 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   view: {
-    padding: 20
+    padding: 20,
+    backgroundColor: 'white',
+    margin: 20,
+    borderRadius: 10,
   },
   button: {
     borderWidth: 1,

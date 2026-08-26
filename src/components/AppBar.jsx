@@ -5,8 +5,7 @@ import { Link } from 'react-router-native';
 
 // Apollo
 import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/client/react';
-import { useApolloClient } from '@apollo/client/react';
+import { useQuery, useApolloClient } from '@apollo/client/react';
 
 // Storage
 import useAuthStorage from '../hooks/useAuthStorage';
