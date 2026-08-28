@@ -7,6 +7,7 @@ export const GET_REPOSITORIES = gql`
     repositories {
       edges {
         node {
+          id
           fullName
           description
           language
@@ -15,6 +16,7 @@ export const GET_REPOSITORIES = gql`
           forksCount
           reviewCount
           ratingAverage
+          url
         }
       }
     }
