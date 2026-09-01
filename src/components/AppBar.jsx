@@ -1,7 +1,7 @@
 import { View, StyleSheet, ScrollView, Pressable} from 'react-native';
 import Text from './Text';
 import theme from './Theme';
-import { Link } from 'react-router-native';
+import { Link, useNavigate } from 'react-router-native';
 
 // Apollo
 import { gql } from '@apollo/client';
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
 const AppBar = () => {
   const authStorage = useAuthStorage();
   const apolloClient = useApolloClient();
+  const navigate = useNavigate();
   const { data } = useQuery(GET_ME, {
     context: {
       headers: {
@@ -54,6 +55,7 @@ const AppBar = () => {
   const signOut = async () => {
     await authStorage.removeAccessToken();
     await apolloClient.resetStore();
+    navigate("/")
   }
 
   if (data?.me === null) {
@@ -89,6 +91,12 @@ const AppBar = () => {
           <Link to="/" underlayColor="transparent" style={styles.link}>
             <Text fontWeight="bold" fontSize="subheading" style={styles.linkText}>
               Repositories
+            </Text>
+          </Link>
+
+          <Link to="/CreateReview" underlayColor="transparent" style={styles.link}>
+            <Text fontWeight="bold" fontSize="subheading" style={styles.linkText}>
+              Create a review
             </Text>
           </Link>
 
