@@ -4,8 +4,11 @@ import useRepositories from '../hooks/useRepositories';
 
 const RepositoryView = () => {
   const { id } = useParams();
-  const { repositories } = useRepositories();
 
+  const { repositories } = useRepositories({
+    orderBy: 'CREATED_AT',
+    orderDirection: 'DESC',
+  });
 
   const repository = repositories?.edges.find(
     (edge) => edge.node.id === id
@@ -16,7 +19,10 @@ const RepositoryView = () => {
   }
 
   return (
-    <RepositoryItem item={repository} showGitHubButton />
+    <RepositoryItem
+      item={repository}
+      showGitHubButton
+    />
   );
 };
 
