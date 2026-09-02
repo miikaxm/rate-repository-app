@@ -77,6 +77,12 @@ const AppBar = () => {
               Sign in
             </Text>
           </Link>
+
+          <Link to="/signUp" underlayColor="transparent" style={styles.link}>
+            <Text fontWeight="bold" fontSize="subheading" style={styles.linkText}>
+              Sign up
+            </Text>
+          </Link>
         </ScrollView>
       </View>
     );
