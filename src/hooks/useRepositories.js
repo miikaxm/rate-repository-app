@@ -36,12 +36,13 @@ export const GET_REPOSITORIES = gql`
   }
 `
 
-const useRepositories = ({ orderBy, orderDirection }) => {
+const useRepositories = ({ orderBy, orderDirection, searchKeyword}) => {
   const { data, loading, error } = useQuery(GET_REPOSITORIES, {
     fetchPolicy: 'cache-and-network',
     variables: {
       orderBy,
       orderDirection,
+      searchKeyword,
     },
   });
 

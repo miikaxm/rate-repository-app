@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-native";
 import { useState } from 'react';
 import { Picker } from '@react-native-picker/picker'
 import { Button, Menu, Divider, PaperProvider } from 'react-native-paper';
+import { Searchbar } from 'react-native-paper';
 
 
 const styles = StyleSheet.create({
@@ -36,9 +37,19 @@ const OrderSelector = ({ selected, setSelected }) => {
       <Picker.Item label="Lowest rated repositories" value="lowest" />
     </Picker>
   );
-};
+}
+
+const SearchBarComponent = ({searchQuery, setSearchQuery}) => {
+  return (
+    <Searchbar
+      placeholder="Search"
+      onChangeText={setSearchQuery}
+      value={searchQuery}
+    />
+  );
+}
  
-export const RepositoryListContainer = ({ repositories, selected, setSelected }) => {
+export const RepositoryListContainer = ({ repositories, selected, setSelected, searchQuery, setSearchQuery }) => {
   const navigate = useNavigate()
 
   const repositoryNodes = repositories
@@ -53,10 +64,16 @@ export const RepositoryListContainer = ({ repositories, selected, setSelected })
     <FlatList
       data={repositoryNodes}
       ListHeaderComponent={
-        <OrderSelector
-          selected={selected}
-          setSelected={setSelected}
-        />
+        <>
+          <SearchBarComponent
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
+          <OrderSelector
+            selected={selected}
+            setSelected={setSelected}
+          />
+        </>
       }
       ItemSeparatorComponent={ItemSeparator}
       renderItem={({ item }) => <Pressable onPress={() => repoView(item.id)}><RepositoryItem item={item} /></Pressable>}
@@ -66,9 +83,11 @@ export const RepositoryListContainer = ({ repositories, selected, setSelected })
 
 const RepositoryList = () => {
   const [selected, setSelected] = useState('latest');
+  const [searchQuery, setSearchQuery] = useState('');
 
   let orderBy = 'CREATED_AT';
   let orderDirection = 'DESC';
+  let searchKeyword = searchQuery;
 
   if (selected === 'highest') {
     orderBy = 'RATING_AVERAGE';
@@ -83,6 +102,7 @@ const RepositoryList = () => {
   const { repositories } = useRepositories({
     orderBy,
     orderDirection,
+    searchKeyword
   });
 
   return (
@@ -90,6 +110,8 @@ const RepositoryList = () => {
       repositories={repositories}
       selected={selected}
       setSelected={setSelected}
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
     />
   );
 };
