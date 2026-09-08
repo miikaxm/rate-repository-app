@@ -106,6 +106,12 @@ const AppBar = () => {
             </Text>
           </Link>
 
+          <Link to="/myReviews" underlayColor="transparent" style={styles.link}>
+            <Text fontWeight="bold" fontSize="subheading" style={styles.linkText}>
+              My reviews
+            </Text>
+          </Link>
+
           <Link to="/signIn" underlayColor="transparent" style={styles.link}>
             <Pressable onPress={signOut}>
               <Text fontWeight="bold" fontSize="subheading" style={styles.linkText}>

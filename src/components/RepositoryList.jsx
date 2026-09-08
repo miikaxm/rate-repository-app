@@ -4,8 +4,8 @@ import useRepositories from '../hooks/useRepositories';
 import { useNavigate } from "react-router-native";
 import { useState } from 'react';
 import { Picker } from '@react-native-picker/picker'
-import { Button, Menu, Divider, PaperProvider } from 'react-native-paper';
 import { Searchbar } from 'react-native-paper';
+import { useDebounce } from 'use-debounce'
 
 
 const styles = StyleSheet.create({
@@ -85,9 +85,10 @@ const RepositoryList = () => {
   const [selected, setSelected] = useState('latest');
   const [searchQuery, setSearchQuery] = useState('');
 
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
+
   let orderBy = 'CREATED_AT';
   let orderDirection = 'DESC';
-  let searchKeyword = searchQuery;
 
   if (selected === 'highest') {
     orderBy = 'RATING_AVERAGE';
@@ -102,7 +103,7 @@ const RepositoryList = () => {
   const { repositories } = useRepositories({
     orderBy,
     orderDirection,
-    searchKeyword
+    searchKeyword: debouncedSearchQuery,
   });
 
   return (

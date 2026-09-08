@@ -1,8 +1,6 @@
-import { FlatList, Text, View, StyleSheet } from "react-native";
-import RepositoryView from "./SingleRepositoryView";
-import { useParams } from "react-router-native";
 import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client/react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import theme from "./Theme";
 
 const styles = StyleSheet.create({
@@ -47,21 +45,20 @@ const styles = StyleSheet.create({
   },
 });
 
-const GET_REVIEWS = gql`
-  query GetRepository($id: ID!) {
-    repository(id: $id) {
+
+const GET_CURRENT_USER_REVIEWS = gql`
+  query getCurrentUser($includeReviews: Boolean = false) {
+    me {
       id
-      fullName
-      reviews {
+      reviews @include(if: $includeReviews) {
         edges {
           node {
-            id
-            text
-            rating
             createdAt
-            user {
-              id
-              username
+            id
+            rating
+            text
+            repository {
+              fullName
             }
           }
         }
@@ -78,7 +75,7 @@ const ReviewItem = ({ review }) => {
       </View>
       
       <View style={styles.reviewContent}>
-        <Text style={styles.username}>{review.user.username}</Text>
+        <Text style={styles.username}>{review.repository.fullName}</Text>
         <Text style={styles.date}>{new Date(review.createdAt).toLocaleDateString()}</Text>
         <Text style={styles.reviewText}>{review.text}</Text>
       </View>
@@ -86,34 +83,37 @@ const ReviewItem = ({ review }) => {
   );
 };
 
-const SingleRepository = () => {
-  const { id } = useParams();
-
-  const { data, loading, error } = useQuery(GET_REVIEWS, {
-    variables: { id },
+const UserReviews = () => {
+  const { data, loading, error } = useQuery(GET_CURRENT_USER_REVIEWS, {
+    variables: {
+      includeReviews: true,
+    },
   });
-  
+
   if (loading) {
     return <Text>Loading...</Text>;
   }
 
   if (error) {
-    console.log(error);
-    return <Text>Error: {error.message}</Text>;
+    console.log(error)
+    return <Text>Error loading reviews: {error.message}</Text>;
   }
 
-  const reviews = data?.repository?.reviews?.edges?.map(
+  const reviews = data?.me?.reviews?.edges?.map(
     (edge) => edge.node
   ) ?? [];
+
+  if (reviews.length === 0) {
+    return <Text>This user has zero reviews</Text>
+  }
 
   return (
     <FlatList
       data={reviews}
       renderItem={({ item }) => <ReviewItem review={item} />}
       keyExtractor={(item) => item.id}
-      ListHeaderComponent={() => <RepositoryView />}
     />
   );
 };
 
-export default SingleRepository;
+export default UserReviews;
