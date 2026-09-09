@@ -1,11 +1,14 @@
 import { gql } from "@apollo/client";
-import { useQuery } from "@apollo/client/react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { useMutation, useQuery } from "@apollo/client/react";
+import { FlatList, StyleSheet, Text, View, Alert } from "react-native";
 import theme from "./Theme";
+import { Button } from "react-native-paper";
+import { useNavigate } from "react-router-native";
 
 const styles = StyleSheet.create({
   review: {
     flexDirection: "row",
+    flexWrap: 'wrap',
     padding: 16,
     marginTop: 10,
     backgroundColor: "white",
@@ -19,6 +22,18 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+    width: "100%",
+    marginTop: 16,
+    gap: 16,
+  },
+  deleteBtn: {
+    flex: 1
+  },
+  viewBtn: {
+    flex: 1
   },
   rating: {
     color: theme.colors.primary,
@@ -59,6 +74,7 @@ const GET_CURRENT_USER_REVIEWS = gql`
             text
             repository {
               fullName
+              id
             }
           }
         }
@@ -67,17 +83,95 @@ const GET_CURRENT_USER_REVIEWS = gql`
   }
 `;
 
+const DELETE_REVIEW = gql`
+  mutation Mutation($deleteReviewId: ID!) {
+    deleteReview(id: $deleteReviewId)
+  }
+`;
+
+
 const ReviewItem = ({ review }) => {
+  const navigate = useNavigate()
+
+  const [deleteReview] = useMutation(DELETE_REVIEW, {
+    variables: {
+      deleteReviewId: review.id,
+    },
+    optimisticResponse: {
+      deleteReview: true,
+    },
+    refetchQueries: [
+      {
+        query: GET_CURRENT_USER_REVIEWS,
+        variables: {
+          includeReviews: true,
+        }
+      }
+    ]
+  });
+
+  const repoView = (id) => {
+    navigate(`/srv/${id}`)
+  }
+
+  const handleDelete = async () => {
+    Alert.alert('Delete review', 'Are you sure you want to delete this review?', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Review deletion rejected by user'),
+        style: 'cancel'
+      },
+      {
+        text: 'Delete',
+        onPress: () => {
+          deleteReview()
+          console.log('Review deleted')
+        },
+      }
+    ])
+  };
+
+  
   return (
     <View style={styles.review}>
+      {/* Rating */}
       <View style={styles.ratingContainer}>
         <Text style={styles.rating}>{review.rating}</Text>
       </View>
-      
+
+      {/* Review content */}
       <View style={styles.reviewContent}>
-        <Text style={styles.username}>{review.repository.fullName}</Text>
-        <Text style={styles.date}>{new Date(review.createdAt).toLocaleDateString()}</Text>
-        <Text style={styles.reviewText}>{review.text}</Text>
+        <Text style={styles.username}>
+          {review.repository.fullName}
+        </Text>
+
+        <Text style={styles.date}>
+          {new Date(review.createdAt).toLocaleDateString()}
+        </Text>
+
+        <Text style={styles.reviewText}>
+          {review.text}
+        </Text>
+      </View>
+
+      {/* Buttons */}
+      <View style={styles.buttonsContainer}>
+        <Button
+          mode="contained"
+          onPress={() => {repoView(review.repository.id)}}
+          style={styles.viewBtn}
+        >
+          View repository
+        </Button>
+
+        <Button
+          mode="contained"
+          onPress={handleDelete}
+          buttonColor="#dc3545"
+          style={styles.deleteBtn}
+        >
+          Delete review
+        </Button>
       </View>
     </View>
   );
