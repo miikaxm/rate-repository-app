@@ -1,6 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import { NativeRouter } from 'react-router-native';
 import { ApolloProvider } from '@apollo/client/react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { PaperProvider } from 'react-native-paper';
 
 import Main from './src/components/Main';
 import createApolloClient from './src/utils/apolloClient';
@@ -12,20 +14,25 @@ const apolloClient = createApolloClient(authStorage);
 
 const App = () => {
   return (
-    <>
-      <StatusBar style='light' />
-      <NativeRouter future={{
-          v7_startTransition: true,
-          v7_relativeSplatPath: true,
-        }}>
-        <ApolloProvider client={apolloClient}>
-          <AuthStorageContext.Provider value={authStorage}>
-            <Main />
-          </AuthStorageContext.Provider>
-        </ApolloProvider>
-      </NativeRouter>
-    </>
-  )
+    <SafeAreaProvider>
+      <StatusBar style="light" />
+
+      <PaperProvider>
+        <NativeRouter
+          future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true,
+          }}
+        >
+          <ApolloProvider client={apolloClient}>
+            <AuthStorageContext.Provider value={authStorage}>
+              <Main />
+            </AuthStorageContext.Provider>
+          </ApolloProvider>
+        </NativeRouter>
+      </PaperProvider>
+    </SafeAreaProvider>
+  );
 };
 
 export default App;
