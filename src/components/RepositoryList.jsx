@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
   }
 });
 
+// add gap between items
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const OrderSelector = ({ selected, setSelected }) => {
