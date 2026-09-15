@@ -1,10 +1,11 @@
 import { FlatList, View, StyleSheet, Pressable } from 'react-native';
+import Text from './Text';
 import RepositoryItem from './RepositoryItem';
 import Text from './Text';
 import useRepositories from '../hooks/useRepositories';
 import { useNavigate } from "react-router-native";
 import { useState } from 'react';
-import { Searchbar, Menu} from 'react-native-paper';
+import { Searchbar, Menu, Button } from 'react-native-paper';
 import { useDebounce } from 'use-debounce'
 
 
@@ -13,102 +14,49 @@ const styles = StyleSheet.create({
     height: 10,
   },
   picker: {
-    height: 50,
-    width: '100%',
-    color: '#1c1c1e',
-  },
-  controls: {
-    backgroundColor: '#f2f2f7',
-    paddingVertical: 12,
-  },
-  pickerContainer: {
-    marginHorizontal: 16,
-    marginTop: 10,
-  },
-  searchBar: {
-    backgroundColor: 'white',
-    borderRadius: 12,
-    elevation: 0,
-    marginHorizontal: 16,
-  },
-  menuButton: {
-    height: 50,
     backgroundColor: 'white',
     borderWidth: 1,
-    borderColor: '#d1d1d6',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    borderColor: '#d1d5db',
+    borderRadius: 8,
+    marginHorizontal: 16,
+    marginVertical: 8,
+    padding:10
   },
-  menuButtonText: {
-    fontSize: 16,
-    color: '#1c1c1e'
-  },
-  menuArrow: {
-    fontSize: 20,
-    color: '#8e8e93',
-  }
 });
 
 // add gap between items
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const OrderSelector = ({ selected, setSelected }) => {
-  const [visible, setVisible] = useState(false);
-
-  const options = [
-    { label: 'Latest', value: 'latest' },
-    { label: 'Highest rated repositories', value: 'highest' },
-    { label: 'Lowest rated repositories', value: 'lowest' },
-  ];
-
-  const selectedLabel = options.find(
-    (option) => option.value === selected
-  )?.label;
-
   return (
-    <View style={styles.pickerContainer}>
-      <Menu
-        visible={visible}
-        onDismiss={() => setVisible(false)}
-        anchor={
-          <Pressable style={styles.menuButton} onPress={() => setVisible(true)}>
-            <Text style={styles.menuButtonText}>
-              {selectedLabel}
-            </Text>
-            <Text style={styles.menuArrow}>⌄</Text>
-          </Pressable>
-        }
-      >
-        {options.map((option) => (
-          <Menu.Item
-            key={option.value}
-            onPress={() => {
-              setSelected(option.value);
-              setVisible(false);
-            }}
-            title={option.label}
-          />
-        ))}
-      </Menu>
-    </View>
-  ) 
-}
-
-const SearchBarComponent = ({searchQuery, setSearchQuery}) => {
-  return (
-    <Searchbar
-      placeholder="Search"
-      onChangeText={setSearchQuery}
-      value={searchQuery}
-      style={styles.searchBar}
-      inputStyle={{ fontSize: 16 }}
-      iconColor="#8e8e93"
-    />
+    <Picker
+      selectedValue={selected}
+      onValueChange={setSelected}
+      style={styles.picker}
+    >
+      <Picker.Item label="Latest" value="latest" />
+      <Picker.Item label="Highest rated repositories" value="highest" />
+      <Picker.Item label="Lowest rated repositories" value="lowest" />
+    </Picker>
   );
 }
+
+const SearchBarComponent = ({ searchQuery, setSearchQuery }) => {
+  return (
+    <View style={styles.searchContainer}>
+      <Searchbar
+        placeholder="Search repositories"
+        onChangeText={setSearchQuery}
+        value={searchQuery}
+        style={styles.searchBar}
+        inputStyle={styles.searchInput}
+        contentStyle={{ height: 48 }}
+        placeholderTextColor="#8E8E93"
+        iconColor="#8E8E93"
+      />
+    </View>
+  );
+};
  
 export const RepositoryListContainer = ({ repositories, selected, setSelected, searchQuery, setSearchQuery, onEndReached }) => {
   const navigate = useNavigate()
@@ -125,11 +73,12 @@ export const RepositoryListContainer = ({ repositories, selected, setSelected, s
     <FlatList
       data={repositoryNodes}
       ListHeaderComponent={
-        <View style={styles.controls}>
+        <View style={styles.header}>
           <SearchBarComponent
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />
+
           <OrderSelector
             selected={selected}
             setSelected={setSelected}
@@ -137,9 +86,11 @@ export const RepositoryListContainer = ({ repositories, selected, setSelected, s
         </View>
       }
       ItemSeparatorComponent={ItemSeparator}
-      renderItem={({ item }) => <Pressable onPress={() => repoView(item.id)}><RepositoryItem item={item} /></Pressable>}
-      onEndReached={onEndReached}
-      onEndReachedThreshold={0.5}
+      renderItem={({ item }) => (
+        <Pressable onPress={() => repoView(item.id)}>
+          <RepositoryItem item={item} />
+        </Pressable>
+      )}
     />
   );
 };

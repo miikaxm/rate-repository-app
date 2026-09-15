@@ -10,15 +10,20 @@ import SingleRepository from './SingleRepository';
 import CreateNewReview from './CreateReview';
 import SignUp from './SignUp';
 import UserReviews from './UsersReviews';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: theme.colors.appBarBackground,
   },
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3d4a9f357973439a6b7c7f6a83ffe0083242aa47
   container: {
     flex: 1,
-    backgroundColor: theme.colors.mainBackground
+    backgroundColor: theme.colors.mainBackground,
   },
 });
 
