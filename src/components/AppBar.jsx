@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView, Pressable} from 'react-native';
+import { View, StyleSheet, ScrollView, Pressable } from 'react-native';
 import Text from './Text';
 import theme from './Theme';
 import { Link, useNavigate } from 'react-router-native';
@@ -88,39 +88,39 @@ const AppBar = () => {
     );
   } else {
     return (
-      <View style={styles.container}>
-        <ScrollView
-          horizontal
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-        >
-          <Link to="/" underlayColor="transparent" style={styles.link}>
-            <Text fontWeight="bold" fontSize="subheading" style={styles.linkText}>
-              Repositories
-            </Text>
-          </Link>
-
-          <Link to="/CreateReview" underlayColor="transparent" style={styles.link}>
-            <Text fontWeight="bold" fontSize="subheading" style={styles.linkText}>
-              Create a review
-            </Text>
-          </Link>
-
-          <Link to="/myReviews" underlayColor="transparent" style={styles.link}>
-            <Text fontWeight="bold" fontSize="subheading" style={styles.linkText}>
-              My reviews
-            </Text>
-          </Link>
-
-          <Link to="/signIn" underlayColor="transparent" style={styles.link}>
-            <Pressable onPress={signOut}>
+        <View style={styles.container}>
+          <ScrollView
+            horizontal
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+          >
+            <Link to="/" underlayColor="transparent" style={styles.link}>
               <Text fontWeight="bold" fontSize="subheading" style={styles.linkText}>
-                Sign out
+                Repositories
               </Text>
-            </Pressable>
-          </Link>
-        </ScrollView>
-      </View>
+            </Link>
+
+            <Link to="/CreateReview" underlayColor="transparent" style={styles.link}>
+              <Text fontWeight="bold" fontSize="subheading" style={styles.linkText}>
+                Create a review
+              </Text>
+            </Link>
+
+            <Link to="/myReviews" underlayColor="transparent" style={styles.link}>
+              <Text fontWeight="bold" fontSize="subheading" style={styles.linkText}>
+                My reviews
+              </Text>
+            </Link>
+
+            <Link to="/signIn" underlayColor="transparent" style={styles.link}>
+              <Pressable onPress={signOut}>
+                <Text fontWeight="bold" fontSize="subheading" style={styles.linkText}>
+                  Sign out
+                </Text>
+              </Pressable>
+            </Link>
+          </ScrollView>
+        </View>
     );
   }
 };
