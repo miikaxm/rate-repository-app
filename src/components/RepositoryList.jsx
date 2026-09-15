@@ -5,8 +5,7 @@ import Text from './Text';
 import useRepositories from '../hooks/useRepositories';
 import { useNavigate } from "react-router-native";
 import { useState } from 'react';
-import { Picker } from '@react-native-picker/picker'
-import { Searchbar } from 'react-native-paper';
+import { Searchbar, Menu, Button } from 'react-native-paper';
 import { useDebounce } from 'use-debounce'
 
 
@@ -43,11 +42,18 @@ const OrderSelector = ({ selected, setSelected }) => {
 
 const SearchBarComponent = ({ searchQuery, setSearchQuery }) => {
   return (
-    <Searchbar
-      placeholder="Search"
-      onChangeText={setSearchQuery}
-      value={searchQuery}
-    />
+    <View style={styles.searchContainer}>
+      <Searchbar
+        placeholder="Search repositories"
+        onChangeText={setSearchQuery}
+        value={searchQuery}
+        style={styles.searchBar}
+        inputStyle={styles.searchInput}
+        contentStyle={{ height: 48 }}
+        placeholderTextColor="#8E8E93"
+        iconColor="#8E8E93"
+      />
+    </View>
   );
 };
  
@@ -66,7 +72,7 @@ export const RepositoryListContainer = ({ repositories, selected, setSelected, s
     <FlatList
       data={repositoryNodes}
       ListHeaderComponent={
-        <>
+        <View style={styles.header}>
           <SearchBarComponent
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -79,7 +85,11 @@ export const RepositoryListContainer = ({ repositories, selected, setSelected, s
         </View>
       }
       ItemSeparatorComponent={ItemSeparator}
-      renderItem={({ item }) => <Pressable onPress={() => repoView(item.id)}><RepositoryItem item={item} /></Pressable>}
+      renderItem={({ item }) => (
+        <Pressable onPress={() => repoView(item.id)}>
+          <RepositoryItem item={item} />
+        </Pressable>
+      )}
     />
   );
 };
